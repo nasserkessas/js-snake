@@ -51,6 +51,8 @@ const redraw = () => {
     ctx.fillStyle = "#ff0000";
     ctx.fill();
 
+    let lastSegment = segments[segments.length - 1]
+
     if (!dead()) {
         segments.pop()
         switch (direction) {
@@ -59,7 +61,7 @@ const redraw = () => {
             case "left": segments.unshift({ x: segments[0].x - 20, y: segments[0].y }); break;
             case "right": segments.unshift({ x: segments[0].x + 20, y: segments[0].y }); break;
         }
-        if (touchingApple()) moveApple();
+        if (touchingApple()) {moveApple(); segments.push(lastSegment);}
     }
     for (segment of segments) {
         ctx.beginPath();
