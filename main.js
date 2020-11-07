@@ -9,6 +9,8 @@ const KEYMAP = {
 
 let direction = "right"
 
+let apple = { x: 400, y: CANVAS.y / 2 }
+
 let segments = [
     { x: CANVAS.x / 2, y: CANVAS.y / 2 },
     { x: CANVAS.x / 2 - 20, y: CANVAS.y / 2 },
@@ -27,14 +29,28 @@ const resetInput = (key) => { /*keyup code here (if any) */ }
 
 const dead = () => { if (segments[0].x + 20 > CANVAS.x || segments[0].x - 20 < 0 || segments[0].y + 20 > CANVAS.y || segments[0].y - 20 < 0) return true; else return false }
 
+const moveApple = () => {
+    apple.x = Math.round(Math.random() * (CANVAS.x - 40) / 20) * 20 + 20; // between 20 and 520
+    apple.y = Math.round(Math.random() * (CANVAS.y - 40) / 20) * 20 + 20;
+    console.log(`(${apple.x}, ${apple.y})`)
+}
+
+const touchingApple = () => { if (apple.x == segments[0].x && apple.y == segments[0].y) return true; else return false }
+
 const redraw = () => {
+    //console.log(`snake: (${segments[0].x}, ${segments[0].y}) apple: (${apple.x}, ${apple.y})`)
     ctx.clearRect(0, 0, CANVAS.x, CANVAS.y);
 
     ctx.beginPath();
     ctx.rect(0, 0, CANVAS.x, CANVAS.y);
     ctx.fillStyle = "#eee";
     ctx.fill();
-    //segment.x = segments[i - 1].x; segment.y = segments[i - 1].y
+
+    ctx.beginPath();
+    ctx.rect(apple.x - 10, CANVAS.y - apple.y - 10, 20, 20);
+    ctx.fillStyle = "#ff0000";
+    ctx.fill();
+
     if (!dead()) {
         segments.pop()
         switch (direction) {
@@ -43,15 +59,16 @@ const redraw = () => {
             case "left": segments.unshift({ x: segments[0].x - 20, y: segments[0].y }); break;
             case "right": segments.unshift({ x: segments[0].x + 20, y: segments[0].y }); break;
         }
-
-        for (segment of segments) {
-             ctx.beginPath();
-             ctx.rect(segment.x - 10, CANVAS.y - segment.y - 10, 20, 20);
-             ctx.fillStyle = "#333";
-             ctx.fill();
-        }
+        if (touchingApple()) moveApple();
     }
-    setTimeout(redraw, 100);
+    for (segment of segments) {
+        ctx.beginPath();
+        ctx.rect(segment.x - 10, CANVAS.y - segment.y - 10, 20, 20);
+        ctx.fillStyle = "#333";
+        ctx.fill();
+    }
+
+    setTimeout(redraw, 150);
 }
 
 document.addEventListener('keydown', (e) => KEYDOWN[KEYMAP[e.which]] = true);
