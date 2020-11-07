@@ -17,6 +17,8 @@ let segments = [
     { x: CANVAS.x / 2 - 40, y: CANVAS.y / 2 }
 ]
 
+let score = 0;
+
 const checkInput = () => {
     if (KEYDOWN['down']) { direction = "down" }
     if (KEYDOWN['right']) { direction = "right" }
@@ -61,7 +63,7 @@ const redraw = () => {
             case "left": segments.unshift({ x: segments[0].x - 20, y: segments[0].y }); break;
             case "right": segments.unshift({ x: segments[0].x + 20, y: segments[0].y }); break;
         }
-        if (touchingApple()) {moveApple(); segments.push(lastSegment);}
+        if (touchingApple()) {moveApple(); segments.push(lastSegment); score++; document.getElementById("score").innerHTML = `Score: ${score}`}
     }
     for (segment of segments) {
         ctx.beginPath();
