@@ -29,12 +29,15 @@ const checkInput = () => {
 
 const resetInput = (key) => { /*keyup code here (if any) */ }
 
-const dead = () => { if (segments[0].x + 20 > CANVAS.x || segments[0].x - 20 < 0 || segments[0].y + 20 > CANVAS.y || segments[0].y - 20 < 0) return true; else return false }
+const dead = () => {
+    for (let i = 1; i < segments.length; i++) if (segments[i].y === segments[0].y && segments[i].x === segments[0].x) return true;
+    if (segments[0].x + 20 > CANVAS.x || segments[0].x - 20 < 0 || segments[0].y + 20 > CANVAS.y || segments[0].y - 20 < 0) return true;
+    else return false;
+}
 
 const moveApple = () => {
     apple.x = Math.round(Math.random() * (CANVAS.x - 40) / 20) * 20 + 20; // between 20 and 520
     apple.y = Math.round(Math.random() * (CANVAS.y - 40) / 20) * 20 + 20;
-    console.log(`(${apple.x}, ${apple.y})`)
 }
 
 const touchingApple = () => { if (apple.x == segments[0].x && apple.y == segments[0].y) return true; else return false }
@@ -63,7 +66,7 @@ const redraw = () => {
             case "left": segments.unshift({ x: segments[0].x - 20, y: segments[0].y }); break;
             case "right": segments.unshift({ x: segments[0].x + 20, y: segments[0].y }); break;
         }
-        if (touchingApple()) {moveApple(); segments.push(lastSegment); score++; document.getElementById("score").innerHTML = `Score: ${score}`}
+        if (touchingApple()) { moveApple(); segments.push(lastSegment); score++; document.getElementById("score").innerHTML = `Score: ${score}` }
     }
     for (segment of segments) {
         ctx.beginPath();
