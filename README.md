@@ -13,6 +13,7 @@ A simple, brower snake game made with Javascript.
 - Make object orientated
 - Optimize
 - Add themes
+- Start screen
 
 ## Aknowledgements
 Created by Nasser Kessas
